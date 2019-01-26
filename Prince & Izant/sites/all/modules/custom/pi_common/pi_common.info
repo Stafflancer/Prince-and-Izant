@@ -1,0 +1,4 @@
+name = Prince&Izant Common Module
+description = Custom module.
+core = 7.x
+package = Custom

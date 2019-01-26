@@ -1,0 +1,97 @@
+<?php
+/**
+ * @file
+ * Code for the medical_common module.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function pi_common_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'menu_edit_item') {
+    if ($form['link_title']['#default_value'] != 'WeChat') {
+      unset($form['menu_fields']['fields']['qr_code']);
+    }
+  }
+  
+  if ($form_id == 'news_node_form') {
+    $dates = array();
+
+    if (!empty($form['created']['#value'])) {
+      $dates[] = '<p><b>Creation date</b>: ' . date('Y/n/j', $form['created']['#value']) . '</p>';
+    }
+    if (!empty($form['changed']['#default_value'])) {
+      $dates[] = '<p><b>Last modification date</b>: ' . date('Y/n/j', $form['changed']['#default_value']) . '</p>';
+    }
+
+    $form['field_publication_date']['#suffix'] = implode('', $dates);
+  }
+
+  if ($form_id == 'webform_client_form_2') {
+    if (!empty($_GET)) {
+      foreach ($_GET as $element_id => $data) {
+        $form['submitted'][$element_id]['#default_value'] = $data;
+      }
+    }
+
+    $form['#submit'][] = 'pi_common_contact_us_form_submit';
+  }
+}
+
+/**
+ * Add a submit handler/function to the form.
+ *
+ * This will add a completion message to the screen when the
+ * form successfully processes
+ */
+function pi_common_contact_us_form_submit($form, &$form_state) {
+  $options = array(
+    'query' => array(
+      'name' => $form_state['input']['submitted']['name'],
+      'company_name' => $form_state['input']['submitted']['company_name'],
+      'email' => $form_state['input']['submitted']['email'],
+      'phone' => $form_state['input']['submitted']['phone'],
+      'info_for' => $form_state['input']['submitted']['info_for'],
+      'product_name' => $form_state['input']['submitted']['product_name'],
+      'product_size' => $form_state['input']['submitted']['product_size'],
+      'quotations' => $form_state['input']['submitted']['quotations'],
+      'estimated_annual_use' => $form_state['input']['submitted']['estimated_annual_use'],
+      'comments' => $form_state['input']['submitted']['comments'],
+      'i_am_not_a_robot' => ($form_state['input']['submitted']['i_am_not_a_robot']['i_am_not_a_robot']) ? array('i_am_not_a_robot') : array(),
+    ),
+    'absolute' => TRUE,
+  );
+
+  $form_state['redirect'] = url(current_path(), $options);
+}
+
+/**
+ * Implements hook_menu().
+ */
+function pi_common_menu() {
+
+  $items['page-404'] = array(
+    'type' => MENU_NORMAL_ITEM,
+    'title' => t('Page not found'),
+    'page callback' => 'pi_common_special_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+  );
+
+  $items['page-403'] = array(
+    'type' => MENU_NORMAL_ITEM,
+    'title' => t('403 Forbidden'),
+    'page callback' => 'pi_common_special_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback.
+ */
+function pi_common_special_page() {
+  return '';
+}

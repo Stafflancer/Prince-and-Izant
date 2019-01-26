@@ -1,0 +1,41 @@
+ .../all/modules/contrib/tablefield/tablefield.module | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/sites/all/modules/contrib/tablefield/tablefield.module b/sites/all/modules/contrib/tablefield/tablefield.module
+index 1992b13..aa18077 100644
+--- a/sites/all/modules/contrib/tablefield/tablefield.module
++++ b/sites/all/modules/contrib/tablefield/tablefield.module
+@@ -1076,6 +1076,22 @@ function tablefield_field_formatter_view($entity_type, $entity, $field, $instanc
+                 $tabledata['tabledata'] = tablefield_hide_rows($tabledata['tabledata']);
+               }
+ 
++              if ($settings['header_orientation'] == 'Both') {
++                $tabledata_cols = tablefield_transpose($tabledata['tabledata']);
++
++                if (!empty($tabledata_cols['col_0'])) {
++                  $first_col_empty = TRUE;
++
++                  foreach ($tabledata_cols['col_0'] as $row => $data) {
++                    if (!empty($data)) {
++                      $first_col_empty = FALSE;
++                    }
++                  }
++
++                  $settings['header_orientation'] = $first_col_empty ? 'Horizontal' : $settings['header_orientation'];
++                }
++              }
++
+               if ($settings['hide_empty_cols']) {
+                 $tabledata['tabledata'] = tablefield_hide_cols($tabledata['tabledata']);
+               }
+@@ -1291,6 +1307,10 @@ function tablefield_field_widget_form(&$form, &$form_state, $field, $instance, $
+       }
+       else {
+         $help_text = t('The first row will appear as the table header. Leave the first row blank if you do not need a header.');
++
++        if ($header_orientation == 'Both') {
++          $help_text .= '<br>' . t('The first column will appear as the table header. Leave the first column blank if you do not need a header.');
++        }
+       }
+     }
+   }

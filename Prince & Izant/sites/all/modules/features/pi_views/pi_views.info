@@ -1,0 +1,12 @@
+name = PI Views
+core = 7.x
+package = Prince & Izant
+version = 7.x-1.0
+dependencies[] = ctools
+dependencies[] = references_dialog
+dependencies[] = views
+dependencies[] = views_infinite_scroll
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = news
+features[views_view][] = reference_dialog_search

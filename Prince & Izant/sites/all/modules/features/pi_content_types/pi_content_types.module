@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the PI Content Types feature.
+ */
+
+include_once 'pi_content_types.features.inc';
