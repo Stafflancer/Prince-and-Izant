@@ -1,4 +1,6 @@
 name = Prince & Izant
+developer = Christopher Akinboboye
+developer url = https://stafflancer.com
 description = Custom theme.
 version = VERSION
 core = 7.x
